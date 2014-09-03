@@ -37,10 +37,24 @@ describe('db nesting', function () {
   });
 
 
-  it('raises an error if path does not exist', function (done) {
+  it('db(path) throws if path does not exist', function (done) {
     co(function *() {
       try {
         var db = yield docdb('not-exists');
+        done(new Error('Error not thrown'));
+      } catch (e) {
+        done();
+      }
+    })();
+  });
+
+
+  it('db(path) throws if path is not a directory', function (done) {
+    fs.createFileSync('test/nested-db/file');
+
+    co(function *() {
+      try {
+        var db = yield docdb('test/nested-db/file');
         done(new Error('Error not thrown'));
       } catch (e) {
         done();
