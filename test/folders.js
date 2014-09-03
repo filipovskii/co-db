@@ -25,6 +25,21 @@ describe('db', function () {
       })(done);
     });
 
+
+    it('does not list files', function (done) {
+      fs.createFileSync('test/nested-db/file');
+
+      co(function *() {
+        var db = yield docdb('test/nested-db'),
+            innerDbs;
+
+        innerDbs = yield db.dbs();
+        assert.equal(innerDbs.length, 2);
+        assert.equal(innerDbs[0], 'folder1');
+        assert.equal(innerDbs[1], 'folder2');
+      })(done);
+    });
+
   });
 
 

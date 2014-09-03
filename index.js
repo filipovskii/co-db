@@ -1,6 +1,7 @@
 var fs = require('co-fs'),
     path = require('path'),
     co = require('co'),
+    filter = require('co-filter'),
     _ = require('lodash');
 
 module.exports = db;
@@ -21,8 +22,15 @@ function Db(p) {
 
 
 Db.prototype.dbs = function *() {
-  var names = yield fs.readdir(this._path);
-  return names;
+  var dbPath = this._path,
+      names;
+
+  names = yield fs.readdir(this._path);
+
+  return yield filter(names, function *(name) {
+    var stats = yield fs.stat(path.join(dbPath, name));
+    return stats.isDirectory();
+  });
 };
 
 
