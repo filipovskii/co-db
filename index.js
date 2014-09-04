@@ -38,6 +38,25 @@ Db.prototype.db = function (p) {
   return new Db(path.join(this._path, p));
 };
 
+
 Db.prototype.path = function *() {
   return yield fs.realpath(this._path);
+};
+
+
+Db.prototype.doc = function *(p) {
+  var filePath = path.join(this._path, p),
+      fullPath = path.join(process.cwd(), filePath),
+      dirPath = path.dirname(fullPath),
+      stream,
+      doc;
+  stream = fs.createReadStream(filePath);
+
+  return {
+    cwd: process.cwd(),
+    id: path.relative(dirPath, fullPath),
+    base: dirPath,
+    path: fullPath,
+    contents: stream
+  }
 };
