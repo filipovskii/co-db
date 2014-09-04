@@ -40,6 +40,35 @@ describe('db', function () {
       })();
     });
 
+
+    it('throws exception if file does not exist', function (done) {
+      co(function * () {
+        var db = yield docdb('test/nested-db');
+
+        try {
+          (yield db.doc('not-exists'));
+          done(new Error('Exception was not thrown!'))
+        } catch (e) {
+          // ok
+          done();
+        }
+      })();
+    });
+
+
+    it('throws exception if file is a folder', function (done) {
+      co(function * () {
+        var db = yield docdb('test');
+
+        try {
+          (yield db.doc('nested-db'));
+          done(new Error('Exception was not thrown!'))
+        } catch (e) {
+          done();
+        }
+      })();
+    });
+
   });
 
 });

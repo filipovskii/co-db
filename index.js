@@ -49,7 +49,19 @@ Db.prototype.doc = function *(p) {
       fullPath = path.join(process.cwd(), filePath),
       dirPath = path.dirname(fullPath),
       stream,
+      stats,
       doc;
+
+  if (!(yield fs.exists(filePath))) {
+    throw new Error('Doc was not found at "' + fullPath + '"');
+  }
+
+  stats = yield fs.stat(filePath);
+
+  if (!stats.isFile()) {
+    throw new Error('Doc at "' + fullPath + '" is not a file');
+  }
+
   stream = fs.createReadStream(filePath);
 
   return {
