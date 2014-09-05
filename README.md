@@ -41,10 +41,10 @@ co(function * () {
 
 ```
 ----Doc Obj----
-{ cwd: '.../co-db',
+{ cwd: '/path/to/co-db',
   id: 'doc1',
-  base: '.../co-db/examples/simple-db',
-  path: '../co-db/examples/simple-db/doc1',
+  base: '/path/to/co-db/examples/simple-db',
+  path: '/path/to/co-db/examples/simple-db/doc1',
   contents: [Function] }
 ----Doc Contents----
    |
