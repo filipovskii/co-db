@@ -1,5 +1,6 @@
 var co = require('co'),
     fs = require('fs-extra'),
+    cofs = require('co-fs'),
     assert = require('assert'),
     docdb = require('..');
 
@@ -36,6 +37,23 @@ describe('db', function () {
         assert.equal(doc.id, 'file');
         assert.ok(doc.contents);
         assert.ok(isGeneratorFunction(doc.contents));
+        done();
+      })();
+    });
+
+
+    it('should have data from file in contents', function (done) {
+      co(function *() {
+        var db = yield docdb('test/nested-db'),
+            doc,
+            contents;
+
+        yield cofs.writeFile('test/nested-db/file', 'File contents');
+
+        doc = yield db.doc('file');
+        contents = yield doc.contents;
+
+        assert.equal('File contents', contents);
         done();
       })();
     });
