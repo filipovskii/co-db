@@ -1,5 +1,8 @@
 # co-db
 
+[![Build
+Status](https://travis-ci.org/filipovskii/co-db.svg?branch=master)](https://travis-ci.org/filipovskii/co-db)
+
 FS-based database to use with [co](https://github.com/visionmedia/co).
 
 
