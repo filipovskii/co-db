@@ -1,6 +1,6 @@
 var assert = require('assert'),
     fs = require('fs-extra'),
-    docdb = require('../'),
+    codb = require('../'),
     co = require('co');
 
 
@@ -15,7 +15,7 @@ describe('db', function () {
 
     it('lists inner folders', function (done) {
       co(function *() {
-        var db = yield docdb('test/nested-db'),
+        var db = yield codb('test/nested-db'),
             innerDbs;
 
         innerDbs = yield db.dbs();
@@ -30,7 +30,7 @@ describe('db', function () {
       fs.createFileSync('test/nested-db/file');
 
       co(function *() {
-        var db = yield docdb('test/nested-db'),
+        var db = yield codb('test/nested-db'),
             innerDbs;
 
         innerDbs = yield db.dbs();
@@ -47,7 +47,7 @@ describe('db', function () {
 
     it('returns nested db', function (done) {
       co(function *() {
-        var db = yield docdb('test'),
+        var db = yield codb('test'),
             innerDb = db.db('nested-db'),
             path;
 
@@ -61,7 +61,7 @@ describe('db', function () {
     it('throws if path does not exist', function (done) {
       co(function *() {
         try {
-          var db = yield docdb('not-exists');
+          var db = yield codb('not-exists');
           done(new Error('Error not thrown'));
         } catch (e) {
           done();
@@ -75,7 +75,7 @@ describe('db', function () {
 
       co(function *() {
         try {
-          var db = yield docdb('test/nested-db/file');
+          var db = yield codb('test/nested-db/file');
           done(new Error('Error not thrown'));
         } catch (e) {
           done();

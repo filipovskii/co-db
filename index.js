@@ -38,6 +38,37 @@ Db.prototype.db = function (p) {
   return new Db(path.join(this._path, p));
 };
 
+
 Db.prototype.path = function *() {
   return yield fs.realpath(this._path);
+};
+
+
+Db.prototype.doc = function *(p) {
+  var filePath = path.join(this._path, p),
+      fullPath = path.join(process.cwd(), filePath),
+      dirPath = path.dirname(fullPath),
+      stream,
+      stats,
+      doc;
+
+  if (!(yield fs.exists(filePath))) {
+    throw new Error('Doc was not found at "' + fullPath + '"');
+  }
+
+  stats = yield fs.stat(filePath);
+
+  if (!stats.isFile()) {
+    throw new Error('Doc at "' + fullPath + '" is not a file');
+  }
+
+  stream = fs.createReadStream(filePath);
+
+  return {
+    cwd: process.cwd(),
+    id: path.relative(dirPath, fullPath),
+    base: dirPath,
+    path: fullPath,
+    contents: stream
+  }
 };
