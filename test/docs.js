@@ -2,7 +2,7 @@ var co = require('co'),
     fs = require('fs-extra'),
     cofs = require('co-fs'),
     assert = require('assert'),
-    docdb = require('..');
+    codb = require('..');
 
 describe('db', function () {
 
@@ -30,7 +30,7 @@ describe('db', function () {
     it('should return doc object, if exists', function (done) {
       fs.createFileSync('test/nested-db/file');
       co(function *(){
-        var db = yield docdb('test/nested-db'),
+        var db = yield codb('test/nested-db'),
             doc = yield db.doc('file');
 
         assert.ok(doc.path.indexOf('test/nested-db') > 0);
@@ -44,7 +44,7 @@ describe('db', function () {
 
     it('should have data from file in contents', function (done) {
       co(function *() {
-        var db = yield docdb('test/nested-db'),
+        var db = yield codb('test/nested-db'),
             doc,
             contents;
 
@@ -61,7 +61,7 @@ describe('db', function () {
 
     it('throws exception if file does not exist', function (done) {
       co(function * () {
-        var db = yield docdb('test/nested-db');
+        var db = yield codb('test/nested-db');
 
         try {
           (yield db.doc('not-exists'));
@@ -76,7 +76,7 @@ describe('db', function () {
 
     it('throws exception if file is a folder', function (done) {
       co(function * () {
-        var db = yield docdb('test');
+        var db = yield codb('test');
 
         try {
           (yield db.doc('nested-db'));
