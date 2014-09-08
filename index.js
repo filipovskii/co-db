@@ -18,6 +18,7 @@ function * db(p) {
 
 function Db(p) {
   this._path = p;
+  this._middleware = [];
 }
 
 
@@ -48,6 +49,7 @@ Db.prototype.doc = function *(p) {
   var filePath = path.join(this._path, p),
       fullPath = path.join(process.cwd(), filePath),
       dirPath = path.dirname(fullPath),
+      middleware = this._middleware.slice(),
       stream,
       stats,
       doc;
@@ -64,13 +66,19 @@ Db.prototype.doc = function *(p) {
 
   stream = fs.createReadStream(filePath);
 
-  return {
+  doc = {
     cwd: process.cwd(),
     id: path.relative(dirPath, fullPath),
     base: dirPath,
     path: fullPath,
     contents: stream
   }
+
+  while(middleware.length > 0) {
+    yield middleware.pop()(doc);
+  }
+
+  return doc;
 };
 
 
@@ -88,4 +96,10 @@ Db.prototype.docs = function *() {
   return yield _.map(fileNames, function *(name) {
     return yield db.doc(name);
   });
+};
+
+
+Db.prototype.use = function (f) {
+  this._middleware.push(f);
+  return db;
 };
