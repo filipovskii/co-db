@@ -12,14 +12,16 @@ FS-based database to use with [co](https://github.com/visionmedia/co).
 npm install co-db
 ```
 
-## Example
+## Examples
+
+### Simple DB
 
 ```
-$ cd examples
+$ cd examples/simple-db
 $ tree .
+
 .
-└── simple-db
-    └── doc1
+└── doc1
 ```
 
 ```js
@@ -40,6 +42,8 @@ co(function * () {
 ```
 
 ```
+$ node --harmony-generators examples/simple-db.js
+
 ----Doc Obj----
 { cwd: '/path/to/co-db',
   id: 'doc1',
@@ -59,6 +63,59 @@ co(function * () {
    '  '   a:f
 
 --------------------
+```
+
+### JSON DB (middleware example)
+
+```
+$ cd examples/json-db
+$ tree .
+
+.
+├── doc1.json
+└── doc2.json
+```
+
+```js
+// examples/json-db.js
+var co = require('co'),
+    codb = require('..');
+
+co(function *() {
+  var jsonDb = yield codb('examples/json-db'),
+      doc = null,
+      docs = [];
+
+  jsonDb.use(function *(doc){
+    var contents = '',
+        chunk;
+
+    while (chunk = yield doc.contents) {
+      contents += chunk.toString();
+    }
+
+    doc.contents = JSON.parse(contents);
+  });
+
+  docs = yield jsonDb.docs();
+
+  docs.forEach(function (doc) {
+    console.log('id ==', doc.id);
+    console.log('contents ==', doc.contents);
+    console.log('------------------------------');
+  });
+})();
+```
+
+```
+$ node --harmony-generators examples/json-db.js
+
+id == doc1.json
+contents == { um: 'oh' }
+------------------------------
+id == doc2.json
+contents == { wow: true }
+------------------------------
 ```
 
 ## License
