@@ -48,7 +48,7 @@ Db.prototype.path = function *() {
 
 Db.prototype.doc = function *(p) {
   var filePath = path.join(this._path, p),
-      middleware = this._middleware.slice(),
+      middleware = this._middleware.slice().reverse(),
       stream,
       stats,
       doc;
