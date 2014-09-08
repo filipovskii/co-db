@@ -87,14 +87,14 @@ co(function *() {
       docs = [];
 
   jsonDb.use(function *(doc){
-    var contents = '',
+    var contents = new Buffer(0),
         chunk;
 
     while (chunk = yield doc.contents) {
-      contents += chunk.toString();
+      contents = Buffer.concat([contents, chunk]);
     }
 
-    doc.contents = JSON.parse(contents);
+    doc.contents = JSON.parse(contents.toString());
   });
 
   docs = yield jsonDb.docs();
