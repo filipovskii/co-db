@@ -15,7 +15,7 @@ describe('db', function () {
     fs.removeSync('test/db');
   });
 
-  describe('.use([middleware])', function () {
+  describe('.use(middleware)', function () {
 
     it('invokes middleware, when returning a doc', function (done) {
       co(function *() {

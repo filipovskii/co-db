@@ -90,7 +90,7 @@ describe('db', function () {
   });
 
 
-  describe('.docs()', function () {
+  describe('.docs([path])', function () {
 
     it('should list containing docs', function (done) {
       fs.createFileSync('test/nested-db/file1');
@@ -127,6 +127,26 @@ describe('db', function () {
         assert.equal(docs[0].id, 'file1');
         done();
       })();
+    });
+
+
+    it('can accept path parameter', function (done) {
+      fs.mkdirpSync('test/nested-db/folder1');
+      fs.createFileSync('test/nested-db/folder1/file1');
+      fs.createFileSync('test/nested-db/folder1/file2');
+
+      co(function *() {
+        var db = yield codb('test/nested-db')
+            docs = [];
+
+        docs = yield db.docs('folder1');
+
+        assert.equal(docs.length, 2);
+        assert.equal(docs[0].id, 'file1');
+        assert.equal(docs[1].id, 'file2');
+        done();
+      })();
+
     });
 
   });
