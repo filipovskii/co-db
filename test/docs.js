@@ -111,6 +111,24 @@ describe('db', function () {
       })();
     });
 
+
+    it('should not list containing folders', function (done) {
+      fs.mkdirpSync('test/nested-db/folder1');
+      fs.mkdirpSync('test/nested-db/folder2');
+      fs.createFileSync('test/nested-db/file1');
+
+      co(function *() {
+        var db = yield codb('test/nested-db'),
+            docs;
+
+        docs = yield db.docs();
+
+        assert.equal(docs.length, 1);
+        assert.equal(docs[0].id, 'file1');
+        done();
+      })();
+    });
+
   });
 
 });
