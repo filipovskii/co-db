@@ -54,13 +54,13 @@ Db.prototype.doc = function *(p) {
       doc;
 
   if (!(yield fs.exists(filePath))) {
-    throw new Error('Doc was not found at "' + fullPath + '"');
+    throw new Error('Doc was not found at "' + filePath + '"');
   }
 
   stats = yield fs.stat(filePath);
 
   if (!stats.isFile()) {
-    throw new Error('Doc at "' + fullPath + '" is not a file');
+    throw new Error('Doc at "' + filePath + '" is not a file');
   }
 
   doc = new Doc(filePath);
@@ -73,19 +73,30 @@ Db.prototype.doc = function *(p) {
 };
 
 
-Db.prototype.docs = function *() {
+/**
+ * Find and return all docs in path. Not recursive.
+ *
+ * @param {string} [.] - path to search docs
+ * @return {Doc[]}
+ */
+Db.prototype.docs = function *(p) {
   var db = this,
       fileNames = [],
-      names = yield fs.readdir(this._path);
+      dirPath,
+      names;
+
+  p = p || '';
+  dirPath = path.join(this._path, p);
+  names = yield fs.readdir(dirPath);
 
   fileNames = yield filter(names, function *(name) {
-    var stats = yield fs.stat(path.join(db._path, name));
+    var stats = yield fs.stat(path.join(dirPath, name));
     return stats.isFile();
   });
 
 
   return yield _.map(fileNames, function *(name) {
-    return yield db.doc(name);
+    return yield db.doc(path.join(p, name));
   });
 };
 
