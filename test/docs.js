@@ -89,4 +89,28 @@ describe('db', function () {
 
   });
 
+
+  describe('.docs()', function () {
+
+    it('should list containing docs', function (done) {
+      fs.createFileSync('test/nested-db/file1');
+      fs.createFileSync('test/nested-db/file2');
+      fs.createFileSync('test/nested-db/file3');
+
+      co(function *() {
+        var db = yield codb('test/nested-db'),
+            docs;
+
+        docs = yield db.docs();
+
+        assert.equal(docs.length, 3);
+        assert.equal(docs[0].id, 'file1');
+        assert.equal(docs[1].id, 'file2');
+        assert.equal(docs[2].id, 'file3');
+        done();
+      })();
+    });
+
+  });
+
 });
