@@ -72,3 +72,20 @@ Db.prototype.doc = function *(p) {
     contents: stream
   }
 };
+
+
+Db.prototype.docs = function *() {
+  var db = this,
+      fileNames = [],
+      names = yield fs.readdir(this._path);
+
+  fileNames = yield filter(names, function *(name) {
+    var stats = yield fs.stat(path.join(db._path, name));
+    return !stats.isDirectory();
+  });
+
+
+  return yield _.map(fileNames, function *(name) {
+    return yield db.doc(name);
+  });
+};
