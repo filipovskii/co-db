@@ -83,7 +83,6 @@ var co = require('co'),
 
 co(function *() {
   var jsonDb = yield codb('examples/json-db'),
-      doc = null,
       docs = [];
 
   jsonDb.use(function *(doc){
