@@ -81,7 +81,7 @@ Db.prototype.docs = function *() {
 
   fileNames = yield filter(names, function *(name) {
     var stats = yield fs.stat(path.join(db._path, name));
-    return !stats.isDirectory();
+    return stats.isFile();
   });
 
 
