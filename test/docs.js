@@ -35,7 +35,7 @@ describe('db', function () {
 
         assert.ok(doc.path.indexOf('test/nested-db') > 0);
         assert.equal(doc.id, 'file');
-        assert.ok(doc.contents);
+        assert.ok(doc.contents, "doc does not have contents");
         assert.ok(isGeneratorFunction(doc.contents));
         done();
       })();
