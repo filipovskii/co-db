@@ -89,6 +89,10 @@ Db.prototype.docs = function *(p) {
   dirPath = path.join(this._path, p);
   names = yield fs.readdir(dirPath);
 
+  names = _.filter(names, function (name) {
+    return name.indexOf('.') !== 0;
+  });
+
   fileNames = yield filter(names, function *(name) {
     var stats = yield fs.stat(path.join(dirPath, name));
     return stats.isFile();
